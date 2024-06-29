@@ -55,13 +55,13 @@ class FeedbackServiceProvider extends ServiceProvider
 
         $twig->addExtension(TwigServiceProvider::class); // Enable use of FeedbackServiceProvider in twig code
 
-        $dispatcher->listen(
-            'IO.Resources.Import',
-            function (ResourceContainer $resourceContainer) {
-                $resourceContainer->addScriptTemplate('Feedback::Content.Scripts');
-                $resourceContainer->addStyleTemplate('Feedback::Content.Styles');
-            }
-        );
+//        $dispatcher->listen(
+//            'IO.Resources.Import',
+//            function (ResourceContainer $resourceContainer) {
+//                $resourceContainer->addScriptTemplate('Feedback::Content.Scripts');
+//                $resourceContainer->addStyleTemplate('Feedback::Content.Styles');
+//            }
+//        );
 
         // register shop builder widgets
         /** @var ContentWidgetRepositoryContract $widgetRepository */
