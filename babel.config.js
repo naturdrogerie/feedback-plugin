@@ -3,7 +3,11 @@ const presets = [
         "@babel/env",
         {
             useBuiltIns: "usage",
-            corejs: 3
+            corejs: "3.37.1",
+            targets: {
+                esmodules: true
+            },
+            bugfixes: true
         }
     ]
 ];
