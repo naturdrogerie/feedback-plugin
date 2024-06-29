@@ -8,4 +8,5 @@
 {% endif %}
 
 <!-- SSR:entry({{ ssr_entry('Feedback', 'resources/js/dist/feedback-server' ~ minSuffix ~ '.js') }}) -->
-<script src="{{ plugin_path('Feedback') }}/js/dist/feedback{{ minSuffix }}.js?v={{ buildHash }}"></script>
+<link rel="preload" href="{{ plugin_path('Feedback') }}/js/dist/feedback{{ minSuffix }}.js" as="script">
+<script src="{{ plugin_path('Feedback') }}/js/dist/feedback{{ minSuffix }}.js"></script>
