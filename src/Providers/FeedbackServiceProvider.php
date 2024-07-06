@@ -58,8 +58,8 @@ class FeedbackServiceProvider extends ServiceProvider
         $dispatcher->listen(
             'IO.Resources.Import',
             function (ResourceContainer $resourceContainer) {
-                $resourceContainer->addScriptTemplate('Feedback::Content.OptimizedScripts');
-                $resourceContainer->addStyleTemplate('Feedback::Content.OptimizedStyles');
+                $resourceContainer->addScriptTemplate('Feedback::Content.Translations');
+//                $resourceContainer->addStyleTemplate('Feedback::Content.OptimizedStyles');
             }
         );
 
