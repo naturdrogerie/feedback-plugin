@@ -3,6 +3,7 @@ let loadFeedbackUserLock = false
 
 const state = () => ({
   authenticatedUser: {},
+  invisibleFeedbacks: [],
   counts: {},
   feedbacks: [],
   itemAttributes: [],
@@ -17,6 +18,7 @@ const mutations =
     {
       setFeedbackAuthenticatedUser (state, authenticatedUser) {
         state.authenticatedUser = authenticatedUser
+        state.invisibleFeedbacks = state.authenticatedUser.feedbacks.filter((item) => !item.isVisible)
       },
 
       setFeedbackCounts (state, counts) {
@@ -43,6 +45,7 @@ const mutations =
       addFeedback (state, feedback) {
         // Add the feedback to the current users feedback list
         state.authenticatedUser.feedbacks.unshift(feedback)
+        state.invisibleFeedbacks.unshift(feedback)
 
         if (feedback.isVisible) {
           const ratingValue = parseInt(feedback.feedbackRating.rating.ratingValue)
@@ -70,9 +73,11 @@ const mutations =
         if (parentFeedbackId === null) {
           state.feedbacks = filterFeedbackList(state.feedbacks, feedbackId)
           state.authenticatedUser.feedbacks = filterFeedbackList(state.authenticatedUser.feedbacks, feedbackId)
+          state.invisibleFeedbacks = filterFeedbackList(state.invisibleFeedbacks, feedbackId)
         } else {
           state.feedbacks = filterReplyList(state.feedbacks, parentFeedbackId, feedbackId)
           state.authenticatedUser.feedbacks = filterReplyList(state.authenticatedUser.feedbacks, parentFeedbackId, feedbackId)
+          state.invisibleFeedbacks = filterReplyList(state.invisibleFeedbacks, parentFeedbackId, feedbackId)
         }
       }
     }
@@ -103,29 +108,15 @@ const actions =
         }
       },
 
-      loadFeedbackCounts ({ commit, state }, itemId) {
-        if (!countsLoaded) {
-          countsLoaded = true
-
-          return $.ajax({
-            type: 'GET',
-            url: '/rest/feedbacks/feedback/helper/counts/' + itemId,
-            success: function (data) {
-              commit('setFeedbackCounts', data.counts)
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-              console.error(errorThrown)
-            }
-          })
-        }
-      },
-
-      loadPaginatedFeedbacks ({ commit, state }, { itemId, feedbacksPerPage }) {
+      loadPaginatedFeedbacks ({ commit, state }, { itemId, feedbacksPerPage, language }) {
         if (!loadPaginatedFeedbacksLock) {
           loadPaginatedFeedbacksLock = true
           const request = $.ajax({
             type: 'GET',
-            url: '/rest/feedbacks/feedback/helper/feedbacklist/' + itemId + '/' + state.pagination.currentPage,
+            url: '/rest/storefront/feedbacks/feedback/helper/feedbacklist/' + itemId + '/' + state.pagination.currentPage,
+            beforeSend: function (xhr) {
+              xhr.setRequestHeader('lang', language)
+            },
             data: {
               feedbacksPerPage: feedbacksPerPage
             },
@@ -133,6 +124,7 @@ const actions =
               commit('setFeedbacks', data.feedbacks)
               commit('setFeedbackItemAttributes', data.itemAttributes)
               commit('setFeedbackPagination', data.pagination)
+              commit('setFeedbackCounts', data.counts)
               loadPaginatedFeedbacksLock = false
             },
             error: function (jqXHR, textStatus, errorThrown) {
@@ -140,7 +132,9 @@ const actions =
               loadPaginatedFeedbacksLock = false
             }
           })
-          commit('incrementCurrentFeedbackPage')
+          if (language) {
+            commit('incrementCurrentFeedbackPage')
+          }
           return request
         }
       },
@@ -162,8 +156,6 @@ const actions =
 
 const getters =
     {}
-
-let countsLoaded = false
 
 export default {
   state,

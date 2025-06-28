@@ -5,22 +5,25 @@
       class="createFeedback"
     >
       <div class="stars">
-        <template v-for="i in [5,4,3,2,1]">
-          <input
-            :id="'star-' + i + _uid"
-            :key="'star_input_' + i"
-            v-model="feedback.ratingValue"
-            :class="'star star-' + i"
-            type="radio"
-            :value="i "
-            :name="'ratingValue' + _uid"
-          >
-          <label
-            :key="'star_label_' + i"
-            :class="'star star-' + i"
-            :for="'star-' + i + _uid"
-          />
-        </template>
+        <fieldset>
+          <legend><span class="d-none">{{ $translate("Feedback::Feedback.feedbackTextLegend") }}</span></legend>
+          <template v-for="i in [5,4,3,2,1]">
+            <input
+              :id="'star-' + i + _uid"
+              :key="'star_input_' + i"
+              v-model="feedback.ratingValue"
+              :class="'star star-' + i"
+              type="radio"
+              :value="i "
+              :name="'ratingValue' + _uid"
+            >
+            <label
+              :key="'star_label_' + i"
+              :class="'star star-' + i"
+              :for="'star-' + i + _uid"
+            ><span class="d-none">{{ $translate("Feedback::Feedback.feedbackAverageLabel") }}</span></label>
+          </template>
+        </fieldset>
       </div>
 
       <p
@@ -43,6 +46,10 @@
           :placeholder="$translate('Feedback::Feedback.authorName')"
           :disabled="authenticatedUser.limitReached || !authenticatedUser.hasPurchased"
         >
+        <label
+          class="position-absolute"
+          for="author"
+        ><span class="d-none">{{ $translate("Feedback::Feedback.authorName") }}</span></label>
 
         <input
           id="feedback-textfield"
@@ -51,6 +58,10 @@
           class="form-control"
           name="feedback-textfield"
         >
+        <label
+          class="position-absolute"
+          for="feedback-textfield"
+        ><span class="d-none">{{ $translate("Feedback::Feedback.feedbackTextLabel") }}</span></label>
       </div>
 
       <div class="form-group">
@@ -64,7 +75,10 @@
           :placeholder="$translate('Feedback::Feedback.title')"
           :disabled="authenticatedUser.limitReached || !authenticatedUser.hasPurchased"
         >
-
+        <label
+          class="position-absolute"
+          for="title"
+        ><span class="d-none">{{ $translate("Feedback::Feedback.title") }}</span></label>
         <div class="invalid-feedback">
           {{ $translate("Feedback::Feedback.titleRequired") }}
         </div>
@@ -80,6 +94,12 @@
           :placeholder="$translate('Feedback::Feedback.reviewMessage')"
           :disabled="authenticatedUser.limitReached || !authenticatedUser.hasPurchased"
         />
+        <label
+          class="position-absolute"
+          for="message"
+        >
+          <span class="d-none">{{ $translate("Feedback::Feedback.reviewMessage") }}</span>
+        </label>
       </div>
 
       <div
