@@ -5,7 +5,7 @@
     class="modal fade feedback-orderitem-modal"
     tabindex="-1"
     role="dialog"
-    :aria-labelledby="'feedbackOrderItem-' + _uid"
+    :aria-labelledby="'feedbackOrderItem-' + id"
     aria-hidden="true"
   >
     <div
@@ -15,7 +15,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <span
-            :id="'feedbackConfirmDeleteLabel-' + _uid"
+            :id="'feedbackConfirmDeleteLabel-' + id"
             class="modal-title h3"
           >{{ $translate("Feedback::Feedback.customerReviews") }}</span>
           <button
@@ -80,7 +80,7 @@
           </div>
           <div class="col-8">
             <a
-              :id="'feedbackOrderItem-' + _uid"
+              :id="'feedbackOrderItem-' + id"
               :href="item.url"
               class="mb-3"
             >{{ item.name }}
@@ -205,7 +205,8 @@ export default {
         name: '',
         itemId: 0,
         attributes: {}
-      }
+      },
+      id: null
     }
   },
 
@@ -243,6 +244,7 @@ export default {
   },
 
   mounted: function () {
+    this.id = this._uid
     const _self = this
     vueEventHub.$on('orderItemFeedback_showform', function (event) {
       _self.prepare(event)
